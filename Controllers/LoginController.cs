@@ -16,15 +16,15 @@ using Microsoft.IdentityModel.Tokens;
 namespace ChattrApi.Controllers
 {
 
-    [Route("/api/token")]
+    [Route("/api/login")]
     [ApiController]
     [EnableCors("CorsPolicy")]
-    public class TokenController : ControllerBase
+    public class LoginController : ControllerBase
     {
         private ApplicationDbContext _context;
         private readonly SignInManager<User> _signInManager;
 
-        public TokenController(
+        public LoginController(
             ApplicationDbContext ctx,
             SignInManager<User> signInManager
         )
@@ -51,7 +51,7 @@ namespace ChattrApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]NewUser postUser)
+        public async Task<IActionResult> Create([FromBody]ExisitingUser postUser)
         {
             // Check simplistic username and password validation rules
             bool isValid = IsValidUserAndPasswordCombination(postUser.Username, postUser.Password);
@@ -63,33 +63,16 @@ namespace ChattrApi.Controllers
 
                 if (user != null)
                 {
-                    string returnMessage = "registered";
-                    return new ObjectResult(returnMessage);
-                }
-                else
-                {
-                    var userstore = new UserStore<User>(_context);
+                    // Found the user, verify credentials
+                    var result = await _signInManager.PasswordSignInAsync(postUser.Username, postUser.Password, false, lockoutOnFailure: false);
 
-                    // User does not exist, create one
-                    user = new User
+                    // Password is correct, generate token and return it
+                    if (result.Succeeded)
                     {
-                        FirstName = postUser.FirstName,
-                        LastName = postUser.LastName,
-                        UserName = postUser.Username,
-                        NormalizedUserName = postUser.Username.ToUpper(),
-                        Email = postUser.Username,
-                        NormalizedEmail = postUser.Username.ToUpper(),
-                        EmailConfirmed = true,
-                        LockoutEnabled = false,
-                        SecurityStamp = Guid.NewGuid().ToString("D")
-                    };
-                    var passwordHash = new PasswordHasher<User>();
-                    user.PasswordHash = passwordHash.HashPassword(user, postUser.Password);
-                    await userstore.CreateAsync(user);
-                    // await userstore.AddToRoleAsync(user);
-                    _context.SaveChanges();
-                    return new ObjectResult(GenerateToken(user.UserName));
+                        return new ObjectResult(GenerateToken(user.UserName));
+                    }
                 }
+                
             }
             return BadRequest();
         }

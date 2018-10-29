@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChattrApi.Models
 {
-    public class NewUser
+    public class ExisitingUser
     {
         [Required]
         [NotMapped]
@@ -16,13 +16,5 @@ namespace ChattrApi.Models
         [Required]
         [NotMapped]
         public string Password { get; set; }
-
-        [Required]
-        [NotMapped]
-        public string FirstName { get; set; }
-
-        [Required]
-        [NotMapped]
-        public string LastName { get; set; }
     }
 }
