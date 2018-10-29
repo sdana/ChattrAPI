@@ -30,19 +30,10 @@ namespace ChattrApi.Controllers
 
         private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
-        //private readonly ApplicationDbContext _context;
-
-        //public UsersController(ApplicationDbContext context)
-        //{
-        //    _context = context;
-        //}
-
         // GET: api/Users
         [HttpGet]
         public async Task<IActionResult> GetUser()
         {
-            //User currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            //return Ok(currentUser);
             string userName = User.Identity.Name;
             User user = _context.User.Single(u => u.UserName == userName);
             return Ok(user);
