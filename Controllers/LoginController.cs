@@ -74,7 +74,8 @@ namespace ChattrApi.Controllers
                 }
                 
             }
-            return BadRequest();
+            string validLogin = "invalid";
+            return Ok(validLogin);
         }
 
         private bool IsValidUserAndPasswordCombination(string username, string password)
