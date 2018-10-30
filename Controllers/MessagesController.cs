@@ -27,9 +27,12 @@ namespace ChattrApi.Controllers
 
         // GET: api/Messages
         [HttpGet]
-        public IEnumerable<Messages> GetMessages()
+        public async Task<IActionResult> GetMessages([FromHeader] string chatroomName)
         {
-            return _context.Messages;
+            Chatroom currentChat = await _context.Chatroom.Where(chat => chat.Title == chatroomName).FirstOrDefaultAsync();
+
+            IEnumerable<Messages> allMessages = _context.Messages.Where(message => message.ChatroomId == currentChat.ChatroomId).Include(message => message.User);
+            return Ok(allMessages);
         }
 
         // GET: api/Messages/5
