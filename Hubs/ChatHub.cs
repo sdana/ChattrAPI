@@ -11,11 +11,18 @@ namespace ChattrApi.Hubs
     [EnableCors("CorsPolicy")]
     public class ChatHub : Hub
     {
-        public async Task AddToGroup(string groupName)
+        //Add user to chat room
+        public async Task AddToGroup(string groupName, string user)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
-            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has joined the group {groupName}.");
+            await Clients.Group(groupName).SendAsync("downloadMessage", $"{user} has joined the group {groupName}.");
+        }
+
+        //send message to chat room
+        public async Task NewMessage(string message, string groupName, string user)
+        {
+            await Clients.Group(groupName).SendAsync("downloadMessage", $"{user}: {message}");
         }
     }
 }
