@@ -18,7 +18,7 @@ namespace ChattrApi.Hubs
 
             await Clients.Caller.SendAsync("downloadPreviousMessages", groupName);
 
-            await Clients.Group(groupName).SendAsync("downloadMessage", $"{user} has joined the group {groupName}.");
+            await Clients.OthersInGroup(groupName).SendAsync("downloadMessage", $"{user} has joined the group {groupName}.");
         }
 
         //send message to chat room
