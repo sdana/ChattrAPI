@@ -24,7 +24,12 @@ namespace ChattrApi.Hubs
         //send message to chat room
         public async Task NewMessage(string message, string groupName, string user)
         {
-            await Clients.Group(groupName).SendAsync("downloadMessage", $"{user}: {message}");
+            await Clients.Group(groupName).SendAsync("downloadMessage", $"{user}: {message}", groupName);
+        }
+
+        public async Task RemoveFromChat(string groupName)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
     }
 }
