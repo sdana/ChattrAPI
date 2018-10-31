@@ -39,5 +39,23 @@ namespace ChattrApi.Controllers
             return Ok(user);
         }
 
+        // PUT: api/Chatrooms/5
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> PatchUser([FromBody] EditUser user)
+        {
+           
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Entry(user).State = EntityState.Modified;
+            
+                await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        
     }
 }
