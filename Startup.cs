@@ -18,6 +18,8 @@ using Microsoft.IdentityModel.Tokens;
 using ChattrApi.Data;
 using ChattrApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using ChattrApi.Hubs;
 
 
 namespace ChattrApi
@@ -51,8 +53,11 @@ namespace ChattrApi
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder => {
                 builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .AllowCredentials();
             }));
+
+            services.AddSignalR();
 
             // Set up JWT authentication service
             services.AddAuthentication(options => {
@@ -86,6 +91,11 @@ namespace ChattrApi
 
             app.UseAuthentication();
             app.UseMvc();
+            app.UseCors("CorsPolicy");
+            app.UseSignalR(options =>
+            {
+                options.MapHub<ChatHub>("/Hubs/ChatHub");
+            });
         }
     }
 }
