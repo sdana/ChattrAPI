@@ -18,7 +18,7 @@ namespace ChattrApi.Hubs
 
             await Clients.Caller.SendAsync("downloadPreviousMessages", groupName);
 
-            await Clients.OthersInGroup(groupName).SendAsync("downloadMessage", $"{user} has joined the group {groupName}.");
+            await Clients.OthersInGroup(groupName).SendAsync("downloadMessage", $"{user} has joined {groupName}.");
         }
 
         //send message to chat room
@@ -27,9 +27,11 @@ namespace ChattrApi.Hubs
             await Clients.Group(groupName).SendAsync("downloadMessage", $"{user}: {message}", groupName);
         }
 
-        public async Task RemoveFromChat(string groupName)
+        public async Task RemoveFromChat(string groupName, string user)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+            await Clients.OthersInGroup(groupName).SendAsync("downloadMessage", $"{user} has left {groupName}.");
+
         }
     }
 }
