@@ -39,23 +39,64 @@ namespace ChattrApi.Controllers
             return Ok(user);
         }
 
-        // PUT: api/Chatrooms/5
-        [HttpPatch]
+        //PUT: api/Users/id
+        [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PatchUser([FromBody] EditUser user)
+        public async Task<IActionResult> PutEdit([FromRoute] string id, [FromBody] User user)
         {
-           
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            if (id != user.UserId)
+            {
+                return BadRequest();
+            }
+
+            string userName = User.Identity.Name;
+            User defaultUser = _context.User.Single(u => u.UserName == userName);
+
+            User editedUser = new User
+            {
+                FirstName = (user.FirstName != null) ? user.FirstName : defaultUser.FirstName,
+                LastName = (user.LastName != null) ? user.LastName : defaultUser.LastName,
+                UserName = defaultUser.UserName,
+                NormalizedUserName = defaultUser.UserName.ToUpper(),
+                Email = defaultUser.UserName,
+                NormalizedEmail = defaultUser.UserName.ToUpper(),
+                EmailConfirmed = true,
+                LockoutEnabled = false,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+
             _context.Entry(user).State = EntityState.Modified;
-            
+
+            try
+            {
                 await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
-        
+
+        private bool UserExists(string id)
+        {
+            string userName = User.Identity.Name;
+            User user = _context.User.Single(u => u.UserName == userName);
+            return (user != null) ? true : false;
+        }
+
     }
 }

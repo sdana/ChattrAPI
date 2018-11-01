@@ -13,6 +13,9 @@ namespace ChattrApi.Models
         public string UserId { get; set; }
 
         [NotMapped]
+        public string UserName { get; set; }
+
+        [NotMapped]
         public string Password { get; set; }
 
         [NotMapped]
