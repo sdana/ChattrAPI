@@ -57,20 +57,11 @@ namespace ChattrApi.Controllers
             string userName = User.Identity.Name;
             User defaultUser = _context.User.Single(u => u.UserName == userName);
 
-            User editedUser = new User
-            {
-                FirstName = (user.FirstName != null) ? user.FirstName : defaultUser.FirstName,
-                LastName = (user.LastName != null) ? user.LastName : defaultUser.LastName,
-                UserName = defaultUser.UserName,
-                NormalizedUserName = defaultUser.UserName.ToUpper(),
-                Email = defaultUser.UserName,
-                NormalizedEmail = defaultUser.UserName.ToUpper(),
-                EmailConfirmed = true,
-                LockoutEnabled = false,
-                SecurityStamp = Guid.NewGuid().ToString("D")
-            };
+            defaultUser.FirstName = (user.FirstName != null) ? user.FirstName : defaultUser.FirstName;
+            defaultUser.LastName = (user.LastName != null) ? user.LastName : defaultUser.LastName;
+            defaultUser.AvatarUrl = (user.AvatarUrl != null) ? user.AvatarUrl : defaultUser.AvatarUrl;
 
-            _context.Entry(user).State = EntityState.Modified;
+            _context.Entry(defaultUser).State = EntityState.Modified;
 
             try
             {
