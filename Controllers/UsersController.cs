@@ -49,7 +49,7 @@ namespace ChattrApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != user.UserId)
+            if (id != user.Id)
             {
                 return BadRequest();
             }
