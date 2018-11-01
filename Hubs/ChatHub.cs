@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ChattrApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -22,9 +23,9 @@ namespace ChattrApi.Hubs
         }
 
         //send message to chat room
-        public async Task NewMessage(string message, string groupName, string user)
+        public async Task NewMessage(AvatarMessageModel message, string groupName)
         {
-            await Clients.Group(groupName).SendAsync("downloadMessage", $"{user}: {message}", groupName);
+            await Clients.Group(groupName).SendAsync("downloadMessage", message, groupName);
         }
 
         public async Task RemoveFromChat(string groupName, string user)
