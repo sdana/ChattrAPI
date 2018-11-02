@@ -57,9 +57,23 @@ namespace ChattrApi.Controllers
             string userName = User.Identity.Name;
             User defaultUser = _context.User.Single(u => u.UserName == userName);
 
-            defaultUser.FirstName = (user.FirstName != null) ? user.FirstName : defaultUser.FirstName;
-            defaultUser.LastName = (user.LastName != null) ? user.LastName : defaultUser.LastName;
-            defaultUser.AvatarUrl = (user.AvatarUrl != null) ? user.AvatarUrl : defaultUser.AvatarUrl;
+            if (user.IsActive == false)
+            {
+                defaultUser.FirstName = "Anonymous";
+                defaultUser.LastName = null;
+                defaultUser.AvatarUrl = null;
+                defaultUser.UserName = null;
+                defaultUser.NormalizedUserName = null;
+                defaultUser.Email = null;
+                defaultUser.NormalizedEmail = null;
+            }
+            else
+            {
+                defaultUser.FirstName = (user.FirstName != null) ? user.FirstName : defaultUser.FirstName;
+                defaultUser.LastName = (user.LastName != null) ? user.LastName : defaultUser.LastName;
+                defaultUser.AvatarUrl = (user.AvatarUrl != null) ? user.AvatarUrl : defaultUser.AvatarUrl;
+            }
+            
 
             _context.Entry(defaultUser).State = EntityState.Modified;
 

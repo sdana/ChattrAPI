@@ -21,5 +21,8 @@ namespace ChattrApi.Models
 
         [Required]
         public string LastName { get; set; }
+
+        [Required]
+        public bool IsActive { get; set; }
     }
 }

@@ -75,6 +75,7 @@ namespace ChattrApi.Controllers
                     {
                         FirstName = postUser.FirstName,
                         LastName = postUser.LastName,
+                        IsActive = true,
                         UserName = postUser.Username,
                         NormalizedUserName = postUser.Username.ToUpper(),
                         Email = postUser.Username,
