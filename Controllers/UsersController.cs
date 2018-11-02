@@ -39,5 +39,55 @@ namespace ChattrApi.Controllers
             return Ok(user);
         }
 
+        //PUT: api/Users/id
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutEdit([FromRoute] string id, [FromBody] User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != user.Id)
+            {
+                return BadRequest();
+            }
+
+            string userName = User.Identity.Name;
+            User defaultUser = _context.User.Single(u => u.UserName == userName);
+
+            defaultUser.FirstName = (user.FirstName != null) ? user.FirstName : defaultUser.FirstName;
+            defaultUser.LastName = (user.LastName != null) ? user.LastName : defaultUser.LastName;
+            defaultUser.AvatarUrl = (user.AvatarUrl != null) ? user.AvatarUrl : defaultUser.AvatarUrl;
+
+            _context.Entry(defaultUser).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        private bool UserExists(string id)
+        {
+            string userName = User.Identity.Name;
+            User user = _context.User.Single(u => u.UserName == userName);
+            return (user != null) ? true : false;
+        }
+
     }
 }
