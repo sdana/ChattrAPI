@@ -13,13 +13,13 @@ namespace ChattrApi.Hubs
     public class ChatHub : Hub
     {
         //Add user to chat room
-        public async Task AddToGroup(string groupName, string user)
+        public async Task AddToGroup(string groupName, AvatarMessageModel message)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
             await Clients.Caller.SendAsync("downloadPreviousMessages", groupName);
 
-            await Clients.OthersInGroup(groupName).SendAsync("downloadMessage", $"{user} has joined {groupName}.");
+            await Clients.OthersInGroup(groupName).SendAsync("downloadMessage", message);
         }
 
         //send message to chat room
