@@ -9,6 +9,7 @@ using ChattrApi.Data;
 using ChattrApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 
 namespace ChattrApi.Controllers
 {
@@ -18,17 +19,23 @@ namespace ChattrApi.Controllers
     public class ChatroomsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public ChatroomsController(ApplicationDbContext context)
+        public ChatroomsController(ApplicationDbContext context, UserManager<User> user)
         {
+            _userManager = user;
             _context = context;
         }
+
+        private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: api/Chatrooms
         [HttpGet]
         [Authorize]
         public IEnumerable<Chatroom> GetChatroom()
         {
+            string userName = User.Identity.Name;
+            //User user = _context.User.Single(u => u.UserName == userName);
             return _context.Chatroom;
         }
 
