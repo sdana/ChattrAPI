@@ -34,5 +34,10 @@ namespace ChattrApi.Hubs
             await Clients.OthersInGroup(groupName).SendAsync("downloadMessage", $"{user} has left {groupName}.");
 
         }
+
+        public async Task RemoveAllUsersFromChat(string groupName)
+        {
+            await Clients.Group(groupName).SendAsync("chatClosed");
+        }
     }
 }

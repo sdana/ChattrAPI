@@ -32,7 +32,7 @@ namespace ChattrApi.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<IActionResult> GetUser()
+        public IActionResult GetUser()
         {
             string userName = User.Identity.Name;
             User user = _context.User.Single(u => u.UserName == userName);
