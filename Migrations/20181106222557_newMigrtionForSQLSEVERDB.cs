@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ChattrApi.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class newMigrtionForSQLSEVERDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,7 +44,8 @@ namespace ChattrApi.Migrations
                     Discriminator = table.Column<string>(nullable: false),
                     AvatarUrl = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    LastName = table.Column<string>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,9 +57,10 @@ namespace ChattrApi.Migrations
                 columns: table => new
                 {
                     ChatroomId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(nullable: false),
-                    Private = table.Column<bool>(nullable: false)
+                    Private = table.Column<bool>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,7 +72,7 @@ namespace ChattrApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -90,7 +93,7 @@ namespace ChattrApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -175,7 +178,7 @@ namespace ChattrApi.Migrations
                 columns: table => new
                 {
                     FavoritePeopleId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<string>(nullable: false),
                     FriendId = table.Column<string>(nullable: false)
                 },
@@ -195,7 +198,7 @@ namespace ChattrApi.Migrations
                 columns: table => new
                 {
                     ChatAllowedUsersId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ChatRoomId = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -221,7 +224,7 @@ namespace ChattrApi.Migrations
                 columns: table => new
                 {
                     MessageId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ChatroomId = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
                     MessageText = table.Column<string>(nullable: false),
@@ -244,6 +247,21 @@ namespace ChattrApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Chatroom",
+                columns: new[] { "ChatroomId", "Private", "Title", "UserId" },
+                values: new object[] { 1, false, "General", null });
+
+            migrationBuilder.InsertData(
+                table: "Chatroom",
+                columns: new[] { "ChatroomId", "Private", "Title", "UserId" },
+                values: new object[] { 2, false, "Introductions", null });
+
+            migrationBuilder.InsertData(
+                table: "Chatroom",
+                columns: new[] { "ChatroomId", "Private", "Title", "UserId" },
+                values: new object[] { 3, false, "Chat 3", null });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -253,7 +271,8 @@ namespace ChattrApi.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -279,7 +298,8 @@ namespace ChattrApi.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatAllowedUsers_ChatRoomId",

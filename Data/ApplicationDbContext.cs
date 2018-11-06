@@ -22,6 +22,10 @@ namespace ChattrApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Messages>()
+                .Property(m => m.MessageId)
+                .ValueGeneratedOnAdd();
+
             Chatroom general = new Chatroom
             {
                 ChatroomId = 1,
