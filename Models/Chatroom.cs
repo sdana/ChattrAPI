@@ -17,5 +17,7 @@ namespace ChattrApi.Models
         public string Title { get; set; }
 
         public bool Private { get; set; }
+
+        public string UserId { get; set; }
     }
 }
