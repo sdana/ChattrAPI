@@ -51,7 +51,7 @@ namespace ChattrApi
                    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder => {
-                builder.AllowAnyOrigin()
+                builder.WithOrigins("https://chattr.cf, https://www.chattr.cf")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
