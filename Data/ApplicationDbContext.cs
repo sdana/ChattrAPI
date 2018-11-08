@@ -39,7 +39,7 @@ namespace ChattrApi.Data
             Chatroom chat3 = new Chatroom
             {
                 ChatroomId = 3,
-                Title = "Chat 3"
+                Title = "NSS Students"
             };
             modelBuilder.Entity<Chatroom>().HasData(chat3);
         }
